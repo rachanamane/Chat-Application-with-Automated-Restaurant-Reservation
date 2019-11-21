@@ -1,4 +1,3 @@
-import shared.User;
 
 import java.io.*;
 import java.net.ServerSocket;

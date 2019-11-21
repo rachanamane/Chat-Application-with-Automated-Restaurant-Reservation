@@ -1,14 +1,8 @@
-import shared.ChatMessage;
-import shared.User;
-import shared.User.UserType;
-
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static shared.User.UserType.human;
 
 /**
  * @author rachana
@@ -58,7 +52,7 @@ public class Database {
       int userId = resultSet.getInt(1);
       resultSet.close();
       preparedStatement.close();
-      return new User(userId, username, UserType.human);
+      return new User(userId, username, User.UserType.human);
     } catch (SQLException e) {
       System.out.println(e.getMessage());
       throw new RuntimeException("User creation failed: " + e.getMessage(), e);
@@ -86,7 +80,7 @@ public class Database {
       return new User(
           resultSet.getInt(1),
           username,
-          UserType.valueOf(resultSet.getString(3)));
+          User.UserType.valueOf(resultSet.getString(3)));
     } catch (SQLException e) {
       throw new RuntimeException("Error authenticating user", e);
     }
@@ -187,11 +181,11 @@ public class Database {
         User userFrom = new User(
             resultSet.getInt(2),
             resultSet.getString(3),
-            UserType.valueOf(resultSet.getString(4)));
+            User.UserType.valueOf(resultSet.getString(4)));
         User userTo = new User(
             resultSet.getInt(5),
             resultSet.getString(6),
-            UserType.valueOf(resultSet.getString(7)));
+            User.UserType.valueOf(resultSet.getString(7)));
         long timestamp = resultSet.getTimestamp(8).getTime();
         String content = resultSet.getString(9);
 
@@ -250,7 +244,7 @@ public class Database {
       while (resultSet.next()) {
         restaurantUsers.add(new User(resultSet.getInt(1),
             resultSet.getString(2),
-            UserType.valueOf(resultSet.getString(3))));
+            User.UserType.valueOf(resultSet.getString(3))));
       }
       return restaurantUsers;
 
