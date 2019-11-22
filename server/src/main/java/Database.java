@@ -14,10 +14,10 @@ public class Database {
 
   static Connection createConnection() {
     try {
-//      Class.forName("com.mysql.jdbc.Driver");
       String dbURL = "jdbc:postgresql://localhost:5432/postgres";
-      String username = "delphi";
+      String username = "rjmane";
       String password = "abjptrzejt";
+//      Class.forName("com.mysql.jdbc.Driver");
       return DriverManager.getConnection(dbURL, username, password);
     } catch (Exception ex) {
       System.out.print("Connection to database failed");
@@ -41,7 +41,7 @@ public class Database {
    */
   static User createUser(Connection connection, String username, String password) {
     try {
-      String sql = "INSERT INTO Users (username, password) VALUES (?,?);";
+      String sql = "INSERT INTO users (username, password) VALUES (?,?);";
       PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setString(1, username);
       preparedStatement.setString(2, password);
@@ -67,7 +67,7 @@ public class Database {
    */
   static User authenticateUser(Connection connection, String username, String password) {
     try {
-      String sql = "SELECT userId, password, type FROM Users WHERE username = ? and type = 'human'";
+      String sql = "SELECT userid, password, type FROM users WHERE username = ? and type = 'human'";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
       preparedStatement.setString(1, username);
       ResultSet resultSet = preparedStatement.executeQuery();
@@ -162,8 +162,8 @@ public class Database {
           "            c.timestamp, " +
           "            c.content " +
           "       FROM Chats c " +
-          "       JOIN Users fu ON (fu.userId = c.userIdFrom) " +
-          "       JOIN Users tu ON (tu.userId = c.userIdTo) " +
+          "       JOIN users fu ON (fu.userid = c.userIdFrom) " +
+          "       JOIN users tu ON (tu.userid = c.userIdTo) " +
           "      WHERE c.messageId > ? " +
           "        AND ((c.userIdFrom = ? AND c.userIdTo = ?) " +
           "           OR (c.userIdFrom = ? AND c.userIdTo = ?)) " +
@@ -209,7 +209,7 @@ public class Database {
    */
   static Connection showUsers(Connection connection) {
     try {
-      String sql = "SELECT userId, username, password FROM Users";
+      String sql = "SELECT userid, username, password FROM users";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
       ResultSet resultSet = preparedStatement.executeQuery();
       int count = 0;
@@ -238,7 +238,7 @@ public class Database {
   static List<User> getAllRestaurantUsers(Connection connection) {
     List<User> restaurantUsers = new ArrayList<>();
     try {
-      String sql = "SELECT userId, username, type FROM Users WHERE type = 'restaurant'";
+      String sql = "SELECT users.userid, users.username, users.type FROM users WHERE users.type = 'restaurant'";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
       ResultSet resultSet = preparedStatement.executeQuery();
       while (resultSet.next()) {
