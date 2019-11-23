@@ -67,10 +67,11 @@ public class Database {
    */
   static User authenticateUser(Connection connection, String username, String password) {
     try {
-      String sql = "SELECT userid, password, type FROM users WHERE username = ? and type = 'human'";
+      String sql = "SELECT userid, password FROM users WHERE username=?";
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
       preparedStatement.setString(1, username);
       ResultSet resultSet = preparedStatement.executeQuery();
+      System.out.println(resultSet.getFetchSize());
       if (!resultSet.next()) {
         throw new RuntimeException("User not found");
       }
@@ -80,7 +81,7 @@ public class Database {
       return new User(
           resultSet.getInt(1),
           username,
-          User.UserType.valueOf(resultSet.getString(3)));
+          User.UserType.human);
     } catch (SQLException e) {
       throw new RuntimeException("Error authenticating user", e);
     }
@@ -161,7 +162,7 @@ public class Database {
           "            tu.type, " +
           "            c.timestamp, " +
           "            c.content " +
-          "       FROM Chats c " +
+          "       FROM chats c " +
           "       JOIN users fu ON (fu.userid = c.userIdFrom) " +
           "       JOIN users tu ON (tu.userid = c.userIdTo) " +
           "      WHERE c.messageId > ? " +
@@ -278,7 +279,6 @@ public class Database {
     } catch (SQLException e) {
       throw new RuntimeException("Error getting your bookings" + e.getMessage(), e);
     }
-
   }
 
   /**
@@ -344,7 +344,6 @@ public class Database {
     } catch (SQLException e) {
       throw new RuntimeException("Error checking for available slots: " + e.getMessage(), e);
     }
-
   }
 
   /**

@@ -12,7 +12,7 @@ import java.util.concurrent.*;
  */
 public class Server {
 
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+  public static void main(String[] args) throws SQLException {
     Connection connection = Database.createConnection();
     List<User> restaurantUsers = Database.getAllRestaurantUsers(connection);
     connection.close();
@@ -37,9 +37,6 @@ public class Server {
         allClients.add(clientThread);
         service.submit(clientThread);
       }
-
-
-
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
